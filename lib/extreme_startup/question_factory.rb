@@ -9,6 +9,10 @@ module ExtremeStartup
         @uuid_generator.generate.to_s[0..7]
       end
     end
+	
+	def initialize(player)
+	  @player = player
+	end
     
     def ask(player)
       url = player.url + '?q=' + URI.escape(self.to_s)
@@ -41,8 +45,12 @@ module ExtremeStartup
     
     def score
       case result
-        when "correct"        then points
-        when "wrong"          then penalty
+        when "correct"
+			@player.correct_answers(self.class) <= 10 ? points : points/10
+        when "wrong"
+		   return penalty*2 if @player.correct_answers(self.class) > 0
+		   return penalty   if @player.wrong_answers(self.class) <= 10
+		   return penalty/10
         when "error_response" then -5
         when "no_answer"     then -20
         else puts "!!!!! result #{result} in score"
@@ -51,8 +59,8 @@ module ExtremeStartup
     
     def delay_before_next
       case result
-        when "correct"        then 5
-        when "wrong"          then 10
+        when "correct"        then 1
+        when "wrong"          then 2
         else 20
       end
     end
@@ -71,6 +79,7 @@ module ExtremeStartup
     
     def answer=(answer)
       @answer = answer
+	   @player.answers_for_question(self.class, result)
     end
 
     def answer
@@ -327,9 +336,9 @@ module ExtremeStartup
   class QuestionFactory
     attr_reader :round
     
-    def initialize
+    def initialize(question_types = nil)
       @round = 1
-      @question_types = [
+      @question_types = question_types || [
         AdditionQuestion,
         MaximumQuestion,
         MultiplicationQuestion, 
