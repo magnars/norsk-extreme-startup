@@ -8,7 +8,7 @@ module ExtremeStartup
   
     def increment_score_for(player, increment)
       @scores[player.uuid] += increment
-      puts "added #{increment} to player #{player.name}'s score. It is now #{@scores[player.uuid]}"
+      puts "added #{increment} to player #{player.name}'s score. It is now #{@scores[player.uuid]}" unless $silence_logging
     end
   
     def new_player(player)

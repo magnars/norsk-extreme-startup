@@ -12,7 +12,6 @@ module ExtremeStartup
     
     def ask(player)
       url = player.url + '?q=' + URI.escape(self.to_s)
-      puts "GET: " + url
       begin
         response = get(url)
         if (response.success?) then
