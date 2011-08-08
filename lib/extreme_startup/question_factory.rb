@@ -61,7 +61,7 @@ module ExtremeStartup
       case result
         when "correct"        then delay
         when "wrong"          then delay*2
-        else 20
+        else delay*4
       end
     end
     
@@ -101,6 +101,7 @@ module ExtremeStartup
   
   class BinaryMathsQuestion < Question
     def initialize(player, *numbers)
+	   super(player)
       if numbers.any?
         @n1, @n2 = *numbers
       else
@@ -111,6 +112,7 @@ module ExtremeStartup
   
   class TernaryMathsQuestion < Question
     def initialize(player, *numbers)
+	   super(player)
       if numbers.any?
         @n1, @n2, @n3 = *numbers
       else
@@ -121,6 +123,7 @@ module ExtremeStartup
   
   class SelectFromListOfNumbersQuestion < Question
     def initialize(player, *numbers)
+	   super(player)
       if numbers.any?
         @numbers = *numbers
       else
@@ -262,10 +265,12 @@ module ExtremeStartup
     end
     
     def is_square(x)
+      return true if x == 0
       (x % Math.sqrt(x)) == 0
     end
     
     def is_cube(x)
+      return true if x == 0
       (x % Math.cbrt(x)) == 0
     end
   end
@@ -318,7 +323,8 @@ module ExtremeStartup
       end
     end
     
-    def initialize
+    def initialize(player)
+	   super(player)
       question = GeneralKnowledgeQuestion.question_bank.sample
       @question = question[0]
       @answer = question[1]
@@ -336,8 +342,8 @@ module ExtremeStartup
   class QuestionFactory
     attr_reader :round
     
-    def initialize(question_types = nil)
-      @round = 1
+    def initialize(question_types = nil, round = 1)
+      @round = round
       @question_types = question_types || [
         AdditionQuestion,
         MaximumQuestion,
