@@ -15,6 +15,16 @@ module ExtremeStartup
   describe Question do
     let(:player)   { Player.new }
     let(:question) { DummyQuestion.new(player) }
+	
+	it "should have normal delay on correct answer" do
+	  question.answer = "correct"
+	  question.delay_before_next(50).should == 50
+	end
+	
+	it "should have double delay on incorrect answer" do
+	  question.answer = "incorrect"
+	  question.delay_before_next(50).should == 100
+	end
   
     it "should pay out points for correct answer" do
 	  question.answer = "correct"
