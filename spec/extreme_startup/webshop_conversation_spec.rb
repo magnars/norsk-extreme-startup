@@ -9,13 +9,19 @@ module ExtremeStartup::Questions
       let(:conversation) { WebshopConversation.new }
 
       it "should start by asking for products" do
-        conversation.question.should == "what products do you have for sale (comma separated)"
+        conversation.question.should == "what products do you have for sale (comma separated)"		
       end
 	  
 	  it "should not allow only one product" do
         conversation.add_answer("one product")
         conversation.score.should == -1
+		conversation.question.should == "what products do you have for sale (comma separated)"
+		conversation.add_answer("red balloon, green balloon, blue balloon")
+		conversation.productListSize.should == 3
       end
+	  
+	  
+	  
       
       it "should award one point per product" do
         conversation.add_answer("red balloon, green balloon, blue balloon")

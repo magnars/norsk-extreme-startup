@@ -2,18 +2,43 @@ module ExtremeStartup::Questions
   include ExtremeStartup
 
   class WebshopConversation < Conversation
+    class WebshopState
+	end
+	class RequestingProductList < WebshopState
+	end
+    class RequestingPrice < WebshopState
+	end
+	class Shopping < WebshopState
+	end
+	class Done < WebshopState
+	end
+	
     def initialize(product_list = nil, shopping_cart = {})
       @product_list = product_list
       @shopping_cart = shopping_cart
+	  if (product_list == nil || product_list.empty?) 
+		@state = RequestingProductList
+	  else
+	    @state = RequestingPrice
+      end
+	  
     end
-    
+     
     def dead?
       not answered_correctly? or @asked_for_total
     end
+	
+	def productListSize
+	  if (@product_list == nil)
+		return 0
+	  end
+	  return @product_list.size
+	end
     
     def question
+	  # TODO Use state variable to find all questions
       @queried_product = @purchased_product = @asked_for_total = nil	  
-      if !@product_list
+      if @state == RequestingProductList
         "what products do you have for sale (comma separated)"
       elsif ready_to_shop?
         @queried_product = @product_list.keys.pick_one
@@ -40,9 +65,8 @@ module ExtremeStartup::Questions
     end
     
     def add_answer(answer)
-	  @askedForList = false
-      if not @product_list
-	    @askedForList = true
+	  # TODO update state variable to all states
+      if @state == RequestingProductList
         @product_list = {} 
         answer.split(",").each { |p| @product_list[p.strip] = nil }
       elsif @queried_product
@@ -67,8 +91,14 @@ module ExtremeStartup::Questions
     end
     
     def answered_correctly?
-	  if @askedForList
-		return @product_list.size > 1
+	  if @state == RequestingProductList
+		if @product_list.size > 1
+		   @state = RequestingPrice
+		   return true
+		else
+		  return false
+		end
+		return correct?
       elsif @queried_product
         return @price
       elsif @asked_for_total
