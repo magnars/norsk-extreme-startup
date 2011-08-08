@@ -19,6 +19,20 @@ Getting started
 * bundle install
 * ruby web_server.rb
 
+Basic development
+-----------------
+* Running unit tests (rspec)
+  * gem install rspec
+  * rspec spec
+  * specs are maintained in the spec/extreme_startup directory
+* Running feature tests (cucumber)
+  * gem install cucumber
+  * cucumber
+  * features are maintained in the features/ directory
+* For Windows users, to get colors in the console
+ * install ANSICON from http://adoxa.110mb.com/ansicon/
+
+
 Notes for facilitators
 ----------------------
 
