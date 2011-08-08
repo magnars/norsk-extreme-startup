@@ -12,7 +12,7 @@ class DummyQuestion2 < DummyQuestion
 end
 
 module ExtremeStartup
-  describe QuestionFactory do
+  describe Question do
     let(:player)   { Player.new }
     let(:question) { DummyQuestion.new(player) }
   
