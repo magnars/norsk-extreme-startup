@@ -12,7 +12,7 @@ module ExtremeStartup::Questions
     end
     
     def question
-      @queried_product = @purchased_product = @asked_for_total = nil
+      @queried_product = @purchased_product = @asked_for_total = nil	  
       if !@product_list
         "what products do you have for sale (comma separated)"
       elsif ready_to_shop?
@@ -40,7 +40,9 @@ module ExtremeStartup::Questions
     end
     
     def add_answer(answer)
+	  @askedForList = false
       if not @product_list
+	    @askedForList = true
         @product_list = {} 
         answer.split(",").each { |p| @product_list[p.strip] = nil }
       elsif @queried_product
@@ -65,7 +67,9 @@ module ExtremeStartup::Questions
     end
     
     def answered_correctly?
-      if @queried_product
+	  if @askedForList
+		return @product_list.size > 1
+      elsif @queried_product
         return @price
       elsif @asked_for_total
         return (Float(@answer.strip) rescue nil) == order_total

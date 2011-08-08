@@ -11,6 +11,11 @@ module ExtremeStartup::Questions
       it "should start by asking for products" do
         conversation.question.should == "what products do you have for sale (comma separated)"
       end
+	  
+	  it "should not allow only one product" do
+        conversation.add_answer("one product")
+        conversation.score.should == -1
+      end
       
       it "should award one point per product" do
         conversation.add_answer("red balloon, green balloon, blue balloon")
