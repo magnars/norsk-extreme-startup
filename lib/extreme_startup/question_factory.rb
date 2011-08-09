@@ -9,10 +9,10 @@ module ExtremeStartup
         @uuid_generator.generate.to_s[0..7]
       end
     end
-	
-	def initialize(player)
-	  @player = player
-	end
+
+    def initialize(player)
+      @player = player
+    end
     
     def ask(player)
       url = player.url + '?q=' + URI.escape(self.to_s)
@@ -46,11 +46,11 @@ module ExtremeStartup
     def score
       case result
         when "correct"
-			@player.correct_answers(self.class) <= 10 ? points : points/10
+          @player.correct_answers(self.class) <= 10 ? points : points/10
         when "wrong"
-		   return penalty*2 if @player.correct_answers(self.class) > 0
-		   return penalty   if @player.wrong_answers(self.class) <= 10
-		   return penalty/10
+          return penalty*2 if @player.correct_answers(self.class) > 0
+          return penalty   if @player.wrong_answers(self.class) <= 10
+          return penalty/10
         when "error_response" then -5
         when "no_answer"     then -20
         else puts "!!!!! result #{result} in score"
@@ -79,7 +79,7 @@ module ExtremeStartup
     
     def answer=(answer)
       @answer = answer
-	   @player.answers_for_question(self.class, result)
+       @player.answers_for_question(self.class, result)
     end
 
     def answer
@@ -101,7 +101,7 @@ module ExtremeStartup
   
   class BinaryMathsQuestion < Question
     def initialize(player, *numbers)
-	   super(player)
+      super(player)
       if numbers.any?
         @n1, @n2 = *numbers
       else
@@ -112,7 +112,7 @@ module ExtremeStartup
   
   class TernaryMathsQuestion < Question
     def initialize(player, *numbers)
-	   super(player)
+      super(player)
       if numbers.any?
         @n1, @n2, @n3 = *numbers
       else
@@ -123,7 +123,7 @@ module ExtremeStartup
   
   class SelectFromListOfNumbersQuestion < Question
     def initialize(player, *numbers)
-	   super(player)
+      super(player)
       if numbers.any?
         @numbers = *numbers
       else
@@ -131,7 +131,7 @@ module ExtremeStartup
         @numbers = random_numbers[0..size].concat(candidate_numbers.shuffle[0..size]).shuffle
       end
     end
-    
+
     def random_numbers
       randoms = Set.new
       loop do
@@ -139,14 +139,14 @@ module ExtremeStartup
         return randoms.to_a if randoms.size >= 5
       end
     end
-    
+
     def correct_answer
        @numbers.select do |x|
          should_be_selected(x)
        end.join(', ')
      end
   end
-  
+
   class MaximumQuestion < SelectFromListOfNumbersQuestion
     def as_text
       "which of the following numbers is the largest: " + @numbers.join(', ')
@@ -154,16 +154,16 @@ module ExtremeStartup
     def points
       40
     end
-    private
-      def should_be_selected(x)
-        x == @numbers.max
-      end
-
-      def candidate_numbers
-          (1..100).to_a
-      end
+  private
+    def should_be_selected(x)
+      x == @numbers.max
     end
-  
+
+    def candidate_numbers
+        (1..100).to_a
+    end
+  end
+
   class AdditionQuestion < BinaryMathsQuestion
     def as_text
       "what is #{@n1} plus #{@n2}"
@@ -173,7 +173,7 @@ module ExtremeStartup
       @n1 + @n2
     end
   end
-  
+
   class SubtractionQuestion < BinaryMathsQuestion 
     def as_text
       "what is #{@n1} minus #{@n2}"
@@ -183,7 +183,7 @@ module ExtremeStartup
       @n1 - @n2
     end
   end
-  
+
   class MultiplicationQuestion < BinaryMathsQuestion 
     def as_text
       "what is #{@n1} multiplied by #{@n2}"
@@ -219,7 +219,7 @@ module ExtremeStartup
       @n1 + @n2 * @n3
     end
   end
-  
+
   class MultiplicationAdditionQuestion < TernaryMathsQuestion
     def as_text
       "what is #{@n1} multiplied by #{@n2} plus #{@n3}"
@@ -232,7 +232,7 @@ module ExtremeStartup
       @n1 * @n2 + @n3
     end
   end
-  
+
   class PowerQuestion < BinaryMathsQuestion 
     def as_text
       "what is #{@n1} to the power of #{@n2}"
@@ -245,7 +245,7 @@ module ExtremeStartup
       @n1 ** @n2
     end
   end
-  
+
   class SquareCubeQuestion < SelectFromListOfNumbersQuestion 
     def as_text
       "which of the following numbers is both a square and a cube: " + @numbers.join(', ')
@@ -308,7 +308,7 @@ module ExtremeStartup
       Integer(0.5 + phi**n/root5)
     end
   end
-  
+
   class GeneralKnowledgeQuestion < Question
     class << self
       def question_bank
@@ -322,26 +322,26 @@ module ExtremeStartup
         ]
       end
     end
-    
+
     def initialize(player)
-	   super(player)
+       super(player)
       question = GeneralKnowledgeQuestion.question_bank.sample
       @question = question[0]
       @answer = question[1]
     end
-    
+
     def as_text
       @question
     end
-    
+
     def correct_answer
       @answer
     end
   end
-  
+
   class QuestionFactory
     attr_reader :round
-    
+
     def initialize(question_types = nil, round = 1)
       @round = round
       @question_types = question_types || [
@@ -359,7 +359,7 @@ module ExtremeStartup
         MultiplicationAdditionQuestion
       ]
     end
-    
+
     def next_question(player)
       available_question_types = @question_types[0..(@round * 2 - 1)]
       available_question_types.sample.new(player)
@@ -367,7 +367,6 @@ module ExtremeStartup
     
     def advance_round
       @round += 1
-    end
-    
+    end  
   end
 end
