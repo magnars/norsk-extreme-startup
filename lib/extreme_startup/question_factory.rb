@@ -79,7 +79,7 @@ module ExtremeStartup
     
     def answer=(answer)
       @answer = answer
-       @player.answers_for_question(self.class, result)
+      @player.answers_for_question(self.class, result)
     end
 
     def answer
@@ -368,5 +368,51 @@ module ExtremeStartup
     def advance_round
       @round += 1
     end  
+  end
+
+  class WarmupQuestion < Question
+    def initialize(player)
+      @player = player
+    end
+    def correct_answer
+      @player.name
+    end
+    def score
+      return 0 if @player.correct_answers(self.class) > 0
+      return 10 if result == "correct"
+      return 0 if @player.wrong_answers(self.class) > 0
+      return -1
+    end
+    def as_text
+      "what is your name"
+    end
+  end
+
+  class GatedQuestionFactory
+    def initialize(question_sets)
+      @question_sets = question_sets
+      @player_question_set_index = Hash.new(0)
+    end
+    def next_question(player)
+      available_questions(player).sample.new(player)
+    end
+    def advance_round
+    end
+    def advance_player(player)
+      index = @player_question_set_index[player]
+      question_set = @question_sets[index]
+      while index < @question_sets.length-1 and has_answered_all_questions(player, question_set)
+        @player_question_set_index[player] += 1
+        index = @player_question_set_index[player]
+        question_set = @question_sets[index]
+      end
+    end
+    def available_questions(player)
+      advance_player(player)
+      @question_sets[@player_question_set_index[player]]
+    end
+    def has_answered_all_questions(player, question_set)
+      question_set.count { |q| player.correct_answers(q) == 0 } == 0
+    end
   end
 end
