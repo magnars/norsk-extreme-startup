@@ -34,7 +34,7 @@ module ExtremeStartup
     end
     
     def result
-      if @answer && self.answered_correctly?(answer)
+      if @answer && answered_correctly?(@answer)
         "correct"
       elsif @answer
         "wrong"
@@ -191,6 +191,18 @@ module ExtremeStartup
   private
     def correct_answer
       @n1 * @n2
+    end
+  end
+  
+  class DivisionQuestion < BinaryMathsQuestion
+    def as_text
+      "what is #{@n1} divided by #{@n2}"
+    end
+    def points
+      80
+    end
+    def answered_correctly?(answer)
+      (Float(answer) * @n2).round(2) == @n1 rescue false
     end
   end
 
