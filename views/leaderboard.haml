@@ -11,6 +11,7 @@
         %li.player
           %div{:class => ["ranking", "name"]} #{html_escape(entry.playername)}
           %div{:class => ["ranking", "points"]} #{entry.score}
+          %div{:class => ["ranking", "correct_answers"]} #{entry.correct_answers}
           %a{ :href => "/withdraw/#{entry.playerid}" }
             Withdraw
           

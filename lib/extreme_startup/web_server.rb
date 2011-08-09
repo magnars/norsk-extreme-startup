@@ -19,6 +19,7 @@ module ExtremeStartup
     set :players,    Hash.new
     set :players_threads, Hash.new
     set :scoreboard, Scoreboard.new
+    #set :question_factory, GatedQuestionFactory.new([[WarmupQuestion], [AdditionQuestion,MaximumQuestion]])
     set :question_factory, QuestionFactory.new
    # set :quizmaster_type, WarmupQuizMaster
     set :quizmaster_type, QuizMaster
@@ -37,7 +38,7 @@ module ExtremeStartup
       def initialize(scoreboard, players)
         @entries = []
         scoreboard.leaderboard.each do |entry| 
-          @entries << LeaderBoardEntry.new(entry[0], players[entry[0]], entry[1])
+          @entries << LeaderBoardEntry.new(entry[0], players[entry[0]], entry[1], players[entry[0]].correct_answer_count)
         end
       end
       
@@ -51,17 +52,19 @@ module ExtremeStartup
     end
     
     class LeaderBoardEntry
-      attr_reader :playerid, :playername, :score
-      def initialize(id, name, score)
-        @playerid = id;
-        @playername = name;
-        @score=score;
+      attr_reader :playerid, :playername, :score, :correct_answers
+      def initialize(id, name, score, correct_answers)
+        @playerid = id
+        @playername = name
+        @score=score
+        @correct_answers = correct_answers
       end
       
       def to_json(*a)
         {
           'playerid'   => playerid,
           'playername' => playername,
+          'correct_answers' => correct_answers,
           'score' => score
         }.to_json(*a)
       end
