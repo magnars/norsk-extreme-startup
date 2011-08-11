@@ -14,7 +14,7 @@ module ExtremeStartup::Questions
 	  
 	  it "should not allow only one product" do
         conversation.add_answer("one product")
-        conversation.score.should < 0
+        conversation.score.should == -1
       end
 	  
 	  
@@ -46,7 +46,7 @@ module ExtremeStartup::Questions
       
       it "should accept a numeric answer" do
         conversation.add_answer "13.01"
-        conversation.score.should > 0
+        conversation.score.should == 10
       end
       
       it "should remember a price" do
@@ -60,7 +60,7 @@ module ExtremeStartup::Questions
 	    conversation.question =~
           /how many dollars does one ((red|green|blue) balloon) cost/
         conversation.add_answer "two dollars"
-        conversation.score.should < 0
+        conversation.score.should == -5
       end
       
       it "should kill clients who didn't get an answer" do
@@ -82,7 +82,7 @@ module ExtremeStartup::Questions
       it "should accept any answer" do
         conversation.question
         conversation.add_answer "okie dokie"
-        conversation.score.should > 0
+        conversation.score.should == 0
       end
       
       it "remembers what it bought" do
@@ -106,13 +106,13 @@ module ExtremeStartup::Questions
       it "accepts correct total" do
         conversation.question
         conversation.add_answer((12*4 + 10*8).to_s)
-        conversation.score.should > 0
+        conversation.score.should == 500
       end
       
       it "rejects incorrect total" do
         conversation.question
         conversation.add_answer("10")
-        conversation.score.should < 0
+        conversation.score.should == -200
       end
       
       it "ends session when it gets correct total" do

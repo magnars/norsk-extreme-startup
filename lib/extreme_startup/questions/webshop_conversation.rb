@@ -130,12 +130,33 @@ module ExtremeStartup::Questions
     end
 
     def points
-      @answer.split(",").length
+	  if @state == RequestingProductList
+	    return @answer.split(",").length
+	  end
+	  if @state == RequestingPrice
+	    return 10
+	  end
+	  if @state == Done
+	    return 500
+	  end
+
+	  return 0
+
     end
 	
 	def penalty
-	  -100
+	  if @state == RequestingProductList
+	    return -1
+	  end
+	  if @state == RequestingPrice
+	    return -5
+	  end
+	  if @state == Done
+	    return -200
+	  end
+	  return 0
 	end
+	
   end
   
   class WebshopQuestion < ConversationalQuestion
