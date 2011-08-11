@@ -14,10 +14,7 @@ module ExtremeStartup::Questions
 	  
 	  it "should not allow only one product" do
         conversation.add_answer("one product")
-        conversation.score.should == -1
-		conversation.question.should == "what products do you have for sale (comma separated)"
-		conversation.add_answer("red balloon, green balloon, blue balloon")
-		conversation.productListSize.should == 3
+        conversation.score.should < 0
       end
 	  
 	  
@@ -60,6 +57,8 @@ module ExtremeStartup::Questions
       end
       
       it "should reject a non-numeric answer" do
+	    conversation.question =~
+          /how many dollars does one ((red|green|blue) balloon) cost/
         conversation.add_answer "two dollars"
         conversation.score.should < 0
       end

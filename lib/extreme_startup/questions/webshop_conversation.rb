@@ -10,22 +10,28 @@ module ExtremeStartup::Questions
 	end
 	class Shopping < WebshopState
 	end
+	class DoneShopping < WebshopState
+	end
 	class Done < WebshopState
 	end
 	
     def initialize(product_list = nil, shopping_cart = {})
+	  @shoppedProducts = 0
       @product_list = product_list
       @shopping_cart = shopping_cart
-	  if (product_list == nil || product_list.empty?) 
+	  @productPrices = {}
+	  if (@product_list == nil || @product_list.empty?) 
 		@state = RequestingProductList
-	  else
+	  elsif (@product_list.has_value?(nil))
 	    @state = RequestingPrice
+	  else
+        @state = Shopping	  
       end
 	  
     end
      
     def dead?
-      not answered_correctly? or @asked_for_total
+      not answered_correctly? or @state == Done
     end
 	
 	def productListSize
@@ -36,21 +42,40 @@ module ExtremeStartup::Questions
 	end
     
     def question
-	  # TODO Use state variable to find all questions
-      @queried_product = @purchased_product = @asked_for_total = nil	  
+      @queried_product = @purchased_product = nil	  
       if @state == RequestingProductList
-        "what products do you have for sale (comma separated)"
-      elsif ready_to_shop?
-        @queried_product = @product_list.keys.pick_one
-        "how many dollars does one #{@queried_product} cost"
-      elsif still_shopping?
-        @purchased_product = @product_list.keys.pick_one
-        @purchased_amount = rand(20)
-        "please put #{@purchased_amount} #{@purchased_product} in my shopping cart"
-      else
-        @asked_for_total = true
-        "what is my order total"
+	    if (@product_list == nil)
+			return "what products do you have for sale (comma separated)"
+		else
+			@state = RequestingPrice
+		end
+	  end 
+	  
+	  if @state == RequestingPrice
+	      if ready_to_shop?
+		     @queried_product = @product_list.keys.pick_one
+			return "how many dollars does one #{@queried_product} cost"
+	      end
+		  @state = Shopping		  
+	  end	  
+	  
+	  if @state == Shopping
+	    if (@shopping_cart.size == 4 || @shopping_cart.size == @product_list.size)
+		    @state = DoneShopping
+		else
+		    @purchased_product = @product_list.keys.pick_one
+			@purchased_amount = rand(20)
+			return "please put #{@purchased_amount} #{@purchased_product} in my shopping cart"
+		end		
       end
+	  
+	  if @state == DoneShopping	    
+	    @state = Done
+	    return "what is my order total"
+	  end 
+	  
+	  return "Why am I here ?"
+	  
     end
     
     def still_shopping?
@@ -65,14 +90,13 @@ module ExtremeStartup::Questions
     end
     
     def add_answer(answer)
-	  # TODO update state variable to all states
       if @state == RequestingProductList
         @product_list = {} 
         answer.split(",").each { |p| @product_list[p.strip] = nil }
-      elsif @queried_product
+      elsif @state == RequestingPrice
         @price = Float(answer) rescue nil
         @product_list[@queried_product] = @price
-      elsif @purchased_product
+      elsif @state == Shopping
         @shopping_cart[@purchased_product] = @purchased_amount
       end
       @answer = answer
@@ -92,16 +116,10 @@ module ExtremeStartup::Questions
     
     def answered_correctly?
 	  if @state == RequestingProductList
-		if @product_list.size > 1
-		   @state = RequestingPrice
-		   return true
-		else
-		  return false
-		end
-		return correct?
-      elsif @queried_product
-        return @price
-      elsif @asked_for_total
+	    return @product_list.size > 1
+      elsif @state == RequestingPrice
+	    return @price
+      elsif @state == Done
         return (Float(@answer.strip) rescue nil) == order_total
       end
       true
@@ -114,6 +132,10 @@ module ExtremeStartup::Questions
     def points
       @answer.split(",").length
     end
+	
+	def penalty
+	  -100
+	end
   end
   
   class WebshopQuestion < ConversationalQuestion

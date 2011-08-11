@@ -40,8 +40,10 @@ module ExtremeStartup
     
     def result
       if @answer && self.answered_correctly?
+	    puts "WAS correct"
         "correct"
       elsif @answer
+	    puts "WAS wrong"
         "wrong"
       else
         @problem
@@ -49,6 +51,7 @@ module ExtremeStartup
     end
     
     def score
+	  puts "Checking score result '#{result}'"
       case result
         when "correct"        then points
         when "wrong"          then penalty
