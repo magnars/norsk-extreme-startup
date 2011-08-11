@@ -17,9 +17,6 @@ module ExtremeStartup::Questions
         conversation.score.should == -1
       end
 	  
-	  
-	  
-      
       it "should award one point per product" do
         conversation.add_answer("red balloon, green balloon, blue balloon")
         conversation.score.should == 3
@@ -68,6 +65,19 @@ module ExtremeStartup::Questions
         conversation.dead?.should be_true
       end
     end
+	 
+	context "client is answering prices" do
+	    let(:conversation) do
+          result = WebshopConversation.new({"red balloon" => 12.0, "blue balloon" => 12.0, "red balloon" => nil})
+        end
+ 
+        it "should award less point player is giving ducplicate prices" do
+		   conversation.add_answer "12.0"
+           conversation.score.should == 1
+		end
+    end 
+
+	
     
     context "client knows product prices" do
       let(:conversation) do

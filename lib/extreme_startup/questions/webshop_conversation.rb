@@ -134,7 +134,7 @@ module ExtremeStartup::Questions
 	    return @answer.split(",").length
 	  end
 	  if @state == RequestingPrice
-	    return 10
+	    return hasDuplicatePrices? ? 1 : 10
 	  end
 	  if @state == Done
 	    return 500
@@ -143,6 +143,15 @@ module ExtremeStartup::Questions
 	  return 0
 
     end
+	
+	def hasDuplicatePrices?
+	   if @product_list == nil || @product_list.empty?
+	     return false
+       end
+	   givenValues = @product_list.values.compact.reject { nil }
+	   uniqueValues = givenValues & givenValues
+	   return uniqueValues.size != givenValues.size
+	end
 	
 	def penalty
 	  if @state == RequestingProductList
