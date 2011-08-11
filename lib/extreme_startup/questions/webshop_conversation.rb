@@ -19,7 +19,6 @@ module ExtremeStartup::Questions
 	  @shoppedProducts = 0
       @product_list = product_list
       @shopping_cart = shopping_cart
-	  @productPrices = {}
 	  if (@product_list == nil || @product_list.empty?) 
 		@state = RequestingProductList
 	  elsif (@product_list.has_value?(nil))
@@ -34,12 +33,6 @@ module ExtremeStartup::Questions
       not answered_correctly? or @state == Done
     end
 	
-	def productListSize
-	  if (@product_list == nil)
-		return 0
-	  end
-	  return @product_list.size
-	end
     
     def question
       @queried_product = @purchased_product = nil	  
@@ -76,13 +69,6 @@ module ExtremeStartup::Questions
 	  
 	  return "Why am I here ?"
 	  
-    end
-    
-    def still_shopping?
-      for product in @product_list.keys
-        return product if not @shopping_cart[product]
-      end
-      return false
     end
     
     def ready_to_shop?
