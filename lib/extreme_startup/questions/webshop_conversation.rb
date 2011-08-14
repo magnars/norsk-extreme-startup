@@ -26,13 +26,11 @@ module ExtremeStartup::Questions
       else
         @state = Shopping
       end
-
     end
 
     def dead?
       not answered_correctly? or @state == Done
     end
-
 
     def question
       @queried_product = @purchased_product = nil
@@ -115,18 +113,10 @@ module ExtremeStartup::Questions
     end
 
     def points
-      if @state == RequestingProductList
-        return @answer.split(",").length
-      end
-      if @state == RequestingPrice
-        return duplicate_prices? ? 1 : 10
-      end
-      if @state == Done
-        return 500
-      end
-
+      return @answer.split(",").length if @state == RequestingProductList
+      return duplicate_prices? ? 1 : 10 if @state == RequestingPrice
+      return 500 if @state == Done
       return 0
-
     end
 
     def duplicate_prices?
@@ -139,18 +129,11 @@ module ExtremeStartup::Questions
     end
 
     def penalty
-      if @state == RequestingProductList
-        return -1
-      end
-      if @state == RequestingPrice
-        return -5
-      end
-      if @state == Done
-        return -200
-      end
+      return -1 if @state == RequestingProductList
+      return -5 if @state == RequestingPrice
+      return -200 if @state == Done
       return 0
     end
-
   end
 
   class WebshopQuestion < ConversationalQuestion
