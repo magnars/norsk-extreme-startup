@@ -78,6 +78,7 @@ module ExtremeStartup
         puts "For player #{@player}\n#{question.display_result}" unless $silence_logging
         @scoreboard.increment_score_for(@player, question.score)
         @player.log_result(question.id, question.result, question.score)
+        #sleep question.delay_before_next(1)
         sleep question.delay_before_next
       end
     end
