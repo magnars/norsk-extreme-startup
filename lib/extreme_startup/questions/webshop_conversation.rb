@@ -44,7 +44,7 @@ module ExtremeStartup::Questions
 
       if @state == RequestingPrice
         if ready_to_shop?
-          @queried_product = @product_list.keys.pick_one
+          @queried_product = @product_list.keys.sample
           return "how many dollars does one #{@queried_product} cost"
         end
         @state = Shopping
@@ -54,7 +54,7 @@ module ExtremeStartup::Questions
         if (@shopping_cart.size == 4 || @shopping_cart.size == @product_list.size)
           @state = DoneShopping
         else
-          @purchased_product = @product_list.keys.pick_one
+          @purchased_product = @product_list.keys.sample
           @purchased_amount = rand(20)
           return "please put #{@purchased_amount} #{@purchased_product} in my shopping cart"
         end
@@ -87,6 +87,9 @@ module ExtremeStartup::Questions
 
     def price_for(product)
       @product_list[product]
+    end
+
+    def correct_answer
     end
 
     def order_total

@@ -1,4 +1,5 @@
 require_relative 'question'
+require_relative 'questions/webshop_conversation'
 
 module ExtremeStartup
   class QuestionFactory
@@ -40,9 +41,9 @@ module ExtremeStartup
       @player.name
     end
     def score
-      return 0 if @player.correct_answers(self.class) > 0
+      return 0 if @player.correct_answers(self.class) > 1
       return 10 if result == "correct"
-      return 0 if @player.wrong_answers(self.class) > 0
+      return 0 if @player.wrong_answers(self.class) > 1
       return -1
     end
     def as_text
@@ -75,6 +76,37 @@ module ExtremeStartup
     end
     def has_answered_all_questions(player, question_set)
       question_set.count { |q| player.correct_answers(q) == 0 } == 0
+    end
+  end
+  
+  class WarmupQuestionFactory < GatedQuestionFactory
+    def initialize
+      super([
+        [WarmupQuestion],
+        [AdditionQuestion,MaximumQuestion,RememberMeQuestion]])
+    end
+  end
+
+  # TODO This should be a GatedQuestionFactory, but that didn't seem to work
+  class WorkshopQuestionFactory < QuestionFactory
+    def initialize
+      super([
+          RememberMeQuestion,
+          ExtremeStartup::Questions::WebshopQuestion,
+          DivisionQuestion,
+          AdditionQuestion,
+          MaximumQuestion,
+          MultiplicationQuestion, 
+          SquareCubeQuestion,
+          GeneralKnowledgeQuestion,
+          PrimesQuestion,
+          SubtractionQuestion,
+          FibonacciQuestion,  
+          PowerQuestion,
+          AdditionAdditionQuestion,
+          AdditionMultiplicationQuestion,
+          MultiplicationAdditionQuestion
+        ])
     end
   end
 end
