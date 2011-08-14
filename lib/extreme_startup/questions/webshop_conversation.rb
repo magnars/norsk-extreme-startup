@@ -101,7 +101,7 @@ module ExtremeStartup::Questions
 
     def answered_correctly?
       if @state == RequestingProductList
-        return @product_list.size > 1
+        return @product_list && @product_list.size > 1
       elsif @state == RequestingPrice
         return @price
       elsif @state == Done
