@@ -3,81 +3,80 @@ module ExtremeStartup::Questions
 
   class WebshopConversation < Conversation
     class WebshopState
-	end
-	class RequestingProductList < WebshopState
-	end
+    end
+    class RequestingProductList < WebshopState
+    end
     class RequestingPrice < WebshopState
-	end
-	class Shopping < WebshopState
-	end
-	class DoneShopping < WebshopState
-	end
-	class Done < WebshopState
-	end
-	
+    end
+    class Shopping < WebshopState
+    end
+    class DoneShopping < WebshopState
+    end
+    class Done < WebshopState
+    end
+
     def initialize(product_list = nil, shopping_cart = {})
-	  @shoppedProducts = 0
+      @shoppedProducts = 0
       @product_list = product_list
       @shopping_cart = shopping_cart
-	  if (@product_list == nil || @product_list.empty?) 
-		@state = RequestingProductList
-	  elsif (@product_list.has_value?(nil))
-	    @state = RequestingPrice
-	  else
-        @state = Shopping	  
+      if (@product_list == nil || @product_list.empty?)
+        @state = RequestingProductList
+      elsif (@product_list.has_value?(nil))
+        @state = RequestingPrice
+      else
+        @state = Shopping
       end
-	  
+
     end
-     
+
     def dead?
       not answered_correctly? or @state == Done
     end
-	
-    
+
+
     def question
-      @queried_product = @purchased_product = nil	  
+      @queried_product = @purchased_product = nil
       if @state == RequestingProductList
-	    if (@product_list == nil)
-			return "what products do you have for sale (comma separated)"
-		else
-			@state = RequestingPrice
-		end
-	  end 
-	  
-	  if @state == RequestingPrice
-	      if ready_to_shop?
-		     @queried_product = @product_list.keys.pick_one
-			return "how many dollars does one #{@queried_product} cost"
-	      end
-		  @state = Shopping		  
-	  end	  
-	  
-	  if @state == Shopping
-	    if (@shopping_cart.size == 4 || @shopping_cart.size == @product_list.size)
-		    @state = DoneShopping
-		else
-		    @purchased_product = @product_list.keys.pick_one
-			@purchased_amount = rand(20)
-			return "please put #{@purchased_amount} #{@purchased_product} in my shopping cart"
-		end		
+        if (@product_list == nil)
+          return "what products do you have for sale (comma separated)"
+        else
+          @state = RequestingPrice
+        end
       end
-	  
-	  if @state == DoneShopping	    
-	    @state = Done
-	    return "what is my order total"
-	  end 
-	  
-	  return "Why am I here ?"
-	  
+
+      if @state == RequestingPrice
+        if ready_to_shop?
+          @queried_product = @product_list.keys.pick_one
+          return "how many dollars does one #{@queried_product} cost"
+        end
+        @state = Shopping
+      end
+
+      if @state == Shopping
+        if (@shopping_cart.size == 4 || @shopping_cart.size == @product_list.size)
+          @state = DoneShopping
+        else
+          @purchased_product = @product_list.keys.pick_one
+          @purchased_amount = rand(20)
+          return "please put #{@purchased_amount} #{@purchased_product} in my shopping cart"
+        end
+      end
+
+      if @state == DoneShopping
+        @state = Done
+        return "what is my order total"
+      end
+
+      return "Why am I here ?"
     end
-    
+
     def ready_to_shop?
       @product_list.has_value?(nil)
     end
-    
+
     def add_answer(answer)
       if @state == RequestingProductList
-        @product_list = {} 
+        @product_list = {}
         answer.split(",").each { |p| @product_list[p.strip] = nil }
       elsif @state == RequestingPrice
         @price = Float(answer) rescue nil
@@ -87,77 +86,77 @@ module ExtremeStartup::Questions
       end
       @answer = answer
     end
-    
+
     def price_for(product)
       @product_list[product]
     end
-    
+
     def order_total
       total = 0
       for product in @product_list.keys
         total += @shopping_cart[product] * price_for(product)
-      end      
+      end
       total
     end
-    
+
     def answered_correctly?
-	  if @state == RequestingProductList
-	    return @product_list.size > 1
+      if @state == RequestingProductList
+        return @product_list.size > 1
       elsif @state == RequestingPrice
-	    return @price
+        return @price
       elsif @state == Done
         return (Float(@answer.strip) rescue nil) == order_total
       end
       true
     end
-    
+
     def shopping_cart_count_for(product)
       @shopping_cart[product]
     end
 
     def points
-	  if @state == RequestingProductList
-	    return @answer.split(",").length
-	  end
-	  if @state == RequestingPrice
-	    return hasDuplicatePrices? ? 1 : 10
-	  end
-	  if @state == Done
-	    return 500
-	  end
+      if @state == RequestingProductList
+        return @answer.split(",").length
+      end
+      if @state == RequestingPrice
+        return hasDuplicatePrices? ? 1 : 10
+      end
+      if @state == Done
+        return 500
+      end
 
-	  return 0
+      return 0
 
     end
-	
-	def hasDuplicatePrices?
-	   if @product_list == nil || @product_list.empty?
-	     return false
+
+    def hasDuplicatePrices?
+       if @product_list == nil || @product_list.empty?
+         return false
        end
-	   givenValues = @product_list.values.compact.reject { nil }
-	   uniqueValues = givenValues & givenValues
-	   return uniqueValues.size != givenValues.size
-	end
-	
-	def penalty
-	  if @state == RequestingProductList
-	    return -1
-	  end
-	  if @state == RequestingPrice
-	    return -5
-	  end
-	  if @state == Done
-	    return -200
-	  end
-	  return 0
-	end
-	
+       givenValues = @product_list.values.compact.reject { nil }
+       uniqueValues = givenValues & givenValues
+       return uniqueValues.size != givenValues.size
+    end
+
+    def penalty
+      if @state == RequestingProductList
+        return -1
+      end
+      if @state == RequestingPrice
+        return -5
+      end
+      if @state == Done
+        return -200
+      end
+      return 0
+    end
+
   end
-  
+
   class WebshopQuestion < ConversationalQuestion
     def create_session
       WebshopConversation.new
-    end    
+    end
 
     def spawn?(sessions, spawn_rate)
       return true if sessions.empty?
