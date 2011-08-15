@@ -342,7 +342,7 @@ module ExtremeStartup
       super(player)
       question = GeneralKnowledgeQuestion.question_bank.sample
       @question = question[0]
-      @answer = question[1]
+      @correct_answer = question[1]
     end
 
     def as_text
@@ -350,7 +350,7 @@ module ExtremeStartup
     end
 
     def correct_answer
-      @answer
+      @correct_answer
     end
   end
 
