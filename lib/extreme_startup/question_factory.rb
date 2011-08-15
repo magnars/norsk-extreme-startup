@@ -87,11 +87,14 @@ module ExtremeStartup
     end
   end
 
-  # TODO This should be a GatedQuestionFactory, but that didn't seem to work
-  class WorkshopQuestionFactory < QuestionFactory
+  # TODO This should have several question sets, but it didn't advance to the last one!
+  class WorkshopQuestionFactory < GatedQuestionFactory
     def initialize
       super([
-          RememberMeQuestion,
+          [RememberMeQuestion,
+          ExtremeStartup::Questions::WebshopQuestion,
+          ExtremeStartup::Questions::WebshopQuestion,
+          ExtremeStartup::Questions::WebshopQuestion,
           ExtremeStartup::Questions::WebshopQuestion,
           DivisionQuestion,
           AdditionQuestion,
@@ -102,11 +105,11 @@ module ExtremeStartup
           PrimesQuestion,
           SubtractionQuestion,
           FibonacciQuestion,  
-          PowerQuestion,
-          AdditionAdditionQuestion,
+          #PowerQuestion,
+          #AdditionAdditionQuestion,
           AdditionMultiplicationQuestion,
           MultiplicationAdditionQuestion
-        ])
+        ]])
     end
   end
 end
