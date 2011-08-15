@@ -116,8 +116,8 @@ module ExtremeStartup::Questions
     end
 
     def points
-      return @answer.split(",").length if @state == RequestingProductList
-      return duplicate_prices? ? 1 : 10 if @state == RequestingPrice
+      return @answer.split(",").length*10 if @state == RequestingProductList
+      return duplicate_prices? ? 1 : 40 if @state == RequestingPrice
       return 500 if @state == Done
       return 0
     end
