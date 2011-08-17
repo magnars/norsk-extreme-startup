@@ -39,7 +39,7 @@ module ExtremeStartup
     end
 
     def to_s
-      "#{name} (#{url})"
+      "#{name} (#{@uuid}: #{url})"
     end
   
    def answers_for_question(question_class, result)

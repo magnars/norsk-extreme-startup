@@ -149,5 +149,15 @@ module ExtremeStartup::Questions
       return false if sessions.length > 3
       (rand(100) < spawn_rate)
     end
+
+    def score
+      case result
+        when "correct"      then points
+        when "wrong"        then penalty
+        when "error_response" then -5
+        when "no_answer"     then -20
+        else puts "!!!!! result #{result} in score"
+      end
+    end
   end
 end
