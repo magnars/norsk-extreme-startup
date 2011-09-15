@@ -47,7 +47,7 @@ When /^I withdraw$/ do
 end
 
 Then /^my name should not be on the leaderboard anymore$/ do
-  page.should_not have_content "Jedi masters"
+  page.should_not have_content("Jedi masters")
 end
 
 Then /^the game master should not send me anymore questions$/ do
