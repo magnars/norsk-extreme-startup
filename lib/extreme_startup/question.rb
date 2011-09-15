@@ -68,6 +68,10 @@ module ExtremeStartup
     def display_result
       "\tquestion: #{self.to_s}\n\tanswer: #{answer} (expected: #{correct_answer})\n\tresult: #{result}\n\tscore: #{score}"
     end
+    
+    def log_result
+      "|question: #{self.to_s}|answer: #{answer[0..100].gsub("\n", "")}|expected: #{correct_answer}|result: #{result}"
+    end
 
     def id
       @id ||= Question.generate_uuid
