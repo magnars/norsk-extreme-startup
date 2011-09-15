@@ -1,0 +1,16 @@
+%html
+  %head
+  %body
+    %h1 Add a new player
+    
+    %p{:class => "error"}Error: #{error}
+  
+    %form{:action => "/players", :method => "post"}
+      %label{ :for => "name" }Name:
+      %input{ :type => "text", :id => "name", :name => "name" }
+      
+      %label{ :for => "name" }URL:
+      %input{ :type => "text", :id => "url", :name => "url" }      
+      
+      %input{ :type => "submit", :value => "Submit"}
+      

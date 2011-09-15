@@ -8,6 +8,19 @@ Feature: A team can register to the game
     When I submit my team name and the url of my computer
     Then I should see that my team was added
     And I should see my team on the leaderboard
+    
+  Scenario Outline: Team with wrong url
+  	Given I want to play the game
+  	When I submit my team name and url "<url>"
+  	Then I should see an error message with "<error>"
+  	And I should not see my team on the leaderboard
+  	
+  	Examples:
+  	| url		       | error 				|
+  	|			       | Please add a URL      |
+  	| 10.0.0.2:8080    | must start with http: |
+  	| http://localhost |  IP address rather than 'localhost' | 
+  
   
   Scenario: When added team receives a link to its log
     Given I submitted my team info
