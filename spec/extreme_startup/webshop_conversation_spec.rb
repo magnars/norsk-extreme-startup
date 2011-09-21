@@ -21,6 +21,11 @@ module ExtremeStartup::Questions
         conversation.add_answer("red balloon, green balloon, blue balloon")
         conversation.score.should == 30
       end
+      
+      it "should only award one point for numeric products" do
+        conversation.add_answer("product123, product 1234, 123 product, 12product, red balloon")
+        conversation.score.should == 14
+      end
 
       it "should start with empty shopping cart" do
         conversation.add_answer("red balloon, green balloon, blue balloon")

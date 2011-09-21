@@ -116,10 +116,15 @@ module ExtremeStartup::Questions
     end
 
     def points
-      return [@answer.split(",").length*10,100].min if @state == RequestingProductList
+      return points_for_products if @state == RequestingProductList
       return duplicate_prices? ? 1 : 40 if @state == RequestingPrice
       return 500 if @state == Done
       return 0
+    end
+    
+    def points_for_products
+      first_products = @answer.split(",")[0..10]
+      first_products.collect { |product| product =~ /\d/ ? 1 : 10 }.inject(0) { |sum,i| sum+i }
     end
 
     def duplicate_prices?

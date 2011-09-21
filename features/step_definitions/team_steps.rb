@@ -8,13 +8,30 @@ When /^I submit my team name and the url of my computer$/ do
   click_on "Submit"
 end
 
+When /^I submit my team name and url "([^"]*)"$/ do |url|
+  fill_in "name", :with => "Sith lords"
+  fill_in "url", :with => url
+  click_on "Submit"
+end
+
+
 Then /^I should see my team on the leaderboard$/ do
   visit '/'
   page.should have_content("Jedi masters")
 end
 
+Then /^I should not see my team on the leaderboard$/ do
+  visit '/'
+  page.should_not have_content("Sith lords")
+end
+
 Then /^I should see that my team was added$/ do
   page.should have_content("Player added - Thanks")
+end
+
+Then /^I should see an error message with "([^"]*)"$/ do |error_message|
+  page.should have_content("Error")
+  page.should have_content(error_message)
 end
 
 Given /^I submitted my team info$/ do
@@ -47,7 +64,7 @@ When /^I withdraw$/ do
 end
 
 Then /^my name should not be on the leaderboard anymore$/ do
-  page.should_not have_content "Jedi masters"
+  page.should_not have_content("Jedi masters")
 end
 
 Then /^the game master should not send me anymore questions$/ do

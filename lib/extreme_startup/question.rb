@@ -68,6 +68,10 @@ module ExtremeStartup
     def display_result
       "\tquestion: #{self.to_s}\n\tanswer: #{answer} (expected: #{correct_answer})\n\tresult: #{result}\n\tscore: #{score}"
     end
+    
+    def log_result
+      "|question: #{self.to_s}|answer: #{answer[0..100].gsub("\n", "")}|expected: #{correct_answer}|result: #{result}"
+    end
 
     def id
       @id ||= Question.generate_uuid
@@ -308,16 +312,19 @@ module ExtremeStartup
    end
 
   class FibonacciQuestion < BinaryMathsQuestion
+    def which_number
+      return @n1 + 1000 if (@player.correct_answers(self.class) > 25)
+      return @n1 + 200 if (@player.correct_answers(self.class) > 15)
+      @n1 + 4
+    end
     def as_text
-      n = @n1 + 4
-      "what is the #{n}th number in the Fibonacci sequence"
+      "what is the #{which_number}th number in the Fibonacci sequence"
     end
     def points
       50
     end
-  private
     def correct_answer
-      n = @n1 + 4
+      n = which_number
       root5 = Math.sqrt(5)
       phi = 0.5 + root5/2
       Integer(0.5 + phi**n/root5)
