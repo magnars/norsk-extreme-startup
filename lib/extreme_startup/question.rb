@@ -196,13 +196,13 @@ module ExtremeStartup
 
   class DivisionQuestion < BinaryMathsQuestion
     def as_text
-      "what is #{@n1} divided by #{@n2}"
+      "what is #{@n1} divided by #{@n2 + 1}"
     end
     def points
       80
     end
     def answered_correctly?(answer)
-      (Float(answer) * @n2).round(2) == @n1 rescue false
+      (Float(answer) * (@n2 + 1)).round(2) == @n1 rescue false
     end
     def correct_answer
       ""
@@ -328,11 +328,11 @@ module ExtremeStartup
     class << self
       def question_bank
         [
-          ["what is the twitter id of the organizer of this dojo", "jhannes"],
+          ["what's the name of the organizers' online adventure game?", "Adventur Delux"],
           ["who is the Prime Minister of Great Britain", "David Cameron"],
           ["which city is the Eiffel tower in", "Paris"],
           ["what currency did Spain use before the Euro", "peseta"],
-          ["what colour is a banana", "yellow"],
+          ["what color is a lemon", "yellow"],
           ["who played James Bond in the film Dr No", "Sean Connery"]
         ]
       end
