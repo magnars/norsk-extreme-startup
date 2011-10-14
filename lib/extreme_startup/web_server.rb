@@ -20,8 +20,8 @@ module ExtremeStartup
     set :players_threads, Hash.new
     set :scoreboard, Scoreboard.new
     #set :question_factory, QuestionFactory.new
-    set :question_factory, WorkshopQuestionFactory.new
-    #set :question_factory, WarmupQuestionFactory.new
+    #set :question_factory, WorkshopQuestionFactory.new
+    set :question_factory, WarmupQuestionFactory.new
     set :quizmaster_type, QuizMaster
 
     get '/' do
@@ -106,16 +106,16 @@ module ExtremeStartup
         haml :add_player_error, :locals => { :error => "Invalid URL (must start with http:// or https://)" }
       elsif params['url'] =~ /localhost/
         haml :add_player_error, :locals => { :error => "Invalid URL (use IP address rather than 'localhost')" }
-      else      
+      else
         player = Player.new(params)
         scoreboard.new_player(player)
         players[player.uuid] = player
-  
+
         player_thread = Thread.new do
           settings.quizmaster_type.new(player, scoreboard, question_factory).start
         end
         players_threads[player.uuid] = player_thread
-  
+
         personal_page = "http://#{local_ip}:#{@env["SERVER_PORT"]}/players/#{player.uuid}"
         haml :player_added, :locals => { :url => personal_page }
       end

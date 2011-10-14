@@ -36,7 +36,7 @@ module ExtremeStartup::Questions
       @queried_product = @purchased_product = nil
       if @state == RequestingProductList
         if (@product_list == nil)
-          return "what products do you have for sale (comma separated)"
+          return "hvilke produkter har du til salgs (kommaseparert)"
         else
           @state = RequestingPrice
         end
@@ -45,7 +45,7 @@ module ExtremeStartup::Questions
       if @state == RequestingPrice
         if ready_to_shop?
           @queried_product = @product_list.keys.sample
-          return "how many dollars does one #{@queried_product} cost"
+          return "hvor mange kroner koster ett stykk #{@queried_product}"
         end
         @state = Shopping
       end
@@ -56,16 +56,16 @@ module ExtremeStartup::Questions
         else
           @purchased_product = @product_list.keys.sample
           @purchased_amount = rand(20)
-          return "please put #{@purchased_amount} #{@purchased_product} in my shopping cart"
+          return "legg #{@purchased_amount}x #{@purchased_product} i min handlekurv"
         end
       end
 
       if @state == DoneShopping
         @state = Done
-        return "what is my order total"
+        return "hvor mye koster alle varene i handlekurven min"
       end
 
-      return "Why am I here ?"
+      return "hvorfor er jeg her igjen"
     end
 
     def ready_to_shop?
@@ -121,7 +121,7 @@ module ExtremeStartup::Questions
       return 500 if @state == Done
       return 0
     end
-    
+
     def points_for_products
       first_products = @answer.split(",")[0..10]
       first_products.collect { |product| product =~ /\d/ ? 1 : 10 }.inject(0) { |sum,i| sum+i }

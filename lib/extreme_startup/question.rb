@@ -68,7 +68,7 @@ module ExtremeStartup
     def display_result
       "\tquestion: #{self.to_s}\n\tanswer: #{answer} (expected: #{correct_answer})\n\tresult: #{result}\n\tscore: #{score}"
     end
-    
+
     def log_result
       "|question: #{self.to_s}|answer: #{answer && answer[0..100].gsub("\n", "")}|expected: #{correct_answer}|result: #{result}"
     end
@@ -153,7 +153,7 @@ module ExtremeStartup
 
   class MaximumQuestion < SelectFromListOfNumbersQuestion
     def as_text
-      "which of the following numbers is the largest: " + @numbers.join(', ')
+      "hvilket av disse tallene er storst: " + @numbers.join(', ')
     end
     def points
       40
@@ -170,7 +170,7 @@ module ExtremeStartup
 
   class AdditionQuestion < BinaryMathsQuestion
     def as_text
-      "what is #{@n1} plus #{@n2}"
+      "hva er #{@n1} pluss #{@n2}"
     end
   private
     def correct_answer
@@ -180,7 +180,7 @@ module ExtremeStartup
 
   class SubtractionQuestion < BinaryMathsQuestion
     def as_text
-      "what is #{@n1} minus #{@n2}"
+      "hva er #{@n1} minus #{@n2}"
     end
   private
     def correct_answer
@@ -190,7 +190,7 @@ module ExtremeStartup
 
   class MultiplicationQuestion < BinaryMathsQuestion
     def as_text
-      "what is #{@n1} multiplied by #{@n2}"
+      "hva er #{@n1} ganget med #{@n2}"
     end
   private
     def correct_answer
@@ -200,13 +200,13 @@ module ExtremeStartup
 
   class DivisionQuestion < BinaryMathsQuestion
     def as_text
-      "what is #{@n1} divided by #{@n2 + 1}"
+      "hva er #{@n1} delt med #{@n2}"
     end
     def points
       80
     end
     def answered_correctly?(answer)
-      (Float(answer) * (@n2 + 1)).round(2) == @n1 rescue false
+      (Float(answer) * @n2).round(2) == @n1 rescue false
     end
     def correct_answer
       ""
@@ -215,7 +215,7 @@ module ExtremeStartup
 
   class AdditionAdditionQuestion < TernaryMathsQuestion
     def as_text
-      "what is #{@n1} plus #{@n2} plus #{@n3}"
+      "hva er #{@n1} pluss #{@n2} pluss #{@n3}"
     end
     def points
       30
@@ -228,7 +228,7 @@ module ExtremeStartup
 
   class AdditionMultiplicationQuestion < TernaryMathsQuestion
     def as_text
-      "what is #{@n1} plus #{@n2} multiplied by #{@n3}"
+      "hva er #{@n1} pluss #{@n2} ganget med #{@n3}"
     end
     def points
       60
@@ -241,7 +241,7 @@ module ExtremeStartup
 
   class MultiplicationAdditionQuestion < TernaryMathsQuestion
     def as_text
-      "what is #{@n1} multiplied by #{@n2} plus #{@n3}"
+      "hva er #{@n1} ganget med #{@n2} pluss #{@n3}"
     end
     def points
       50
@@ -254,7 +254,7 @@ module ExtremeStartup
 
   class PowerQuestion < BinaryMathsQuestion
     def as_text
-      "what is #{@n1} to the power of #{@n2}"
+      "hva er #{@n1} opphoyet i #{@n2}"
     end
     def points
       20
@@ -267,7 +267,7 @@ module ExtremeStartup
 
   class SquareCubeQuestion < SelectFromListOfNumbersQuestion
     def as_text
-      "which of the following numbers is both a square and a cube: " + @numbers.join(', ')
+      "hvilke av disse tallene har heltalls kvadratrot og kubikkrot: " + @numbers.join(', ')
     end
     def points
       60
@@ -296,7 +296,7 @@ module ExtremeStartup
 
   class PrimesQuestion < SelectFromListOfNumbersQuestion
      def as_text
-       "which of the following numbers are primes: " + @numbers.join(', ')
+       "hvilke av disse tallene er primtall: " + @numbers.join(', ')
      end
      def points
        60
@@ -318,7 +318,7 @@ module ExtremeStartup
       @n1 + 4
     end
     def as_text
-      "what is the #{which_number}th number in the Fibonacci sequence"
+      "hva er det #{which_number}. nummeret i Fibonaccirekken"
     end
     def points
       50
@@ -335,12 +335,12 @@ module ExtremeStartup
     class << self
       def question_bank
         [
-          ["what's the name of the organizers' online adventure game?", "Adventur Delux"],
-          ["who is the Prime Minister of Great Britain", "David Cameron"],
-          ["which city is the Eiffel tower in", "Paris"],
-          ["what currency did Spain use before the Euro", "peseta"],
-          ["what color is a lemon", "yellow"],
-          ["who played James Bond in the film Dr No", "Sean Connery"]
+          ["hvilket firma jobber Magnar og Kjetil i", "Kodemaker"],
+          ["hva het den store do-konkurransen", "Driter du i Lean?"],
+          ["i hvilken by finner du Louvre", "Paris"],
+          ["hvilken myntenhet brukte Italia tidligere", "lire"],
+          ["hvilken farge har bananer", "gul"],
+          ["hvem spilte James Bond i filmen Dr No", "Sean Connery"]
         ]
       end
     end
@@ -443,7 +443,7 @@ module ExtremeStartup
 
   class RememberMeConversation < Conversation
     def initialize
-      @name = %w(abe bob chuck dick evan fred george hob ivan jim pete ric).sample
+      @name = %w(Jan Hans Per Petter Mari Line Alma Nina Jeppe Borge Petrus Isabel Nora Sigrid).sample
       @attempts = 0
     end
 
@@ -458,9 +458,9 @@ module ExtremeStartup
 
     def question
       if answered_correctly?
-        return "what is my name"
+        return "hva heter jeg"
       else
-        return "my name is #{@name}. what is my name"
+        return "mitt navn er #{@name}. hva heter jeg"
       end
     end
 

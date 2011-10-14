@@ -10,12 +10,12 @@ module ExtremeStartup
       @question_types = question_types || [
         AdditionQuestion,
         MaximumQuestion,
-        MultiplicationQuestion, 
+        MultiplicationQuestion,
         SquareCubeQuestion,
         GeneralKnowledgeQuestion,
         PrimesQuestion,
         SubtractionQuestion,
-        FibonacciQuestion,  
+        FibonacciQuestion,
         PowerQuestion,
         AdditionAdditionQuestion,
         AdditionMultiplicationQuestion,
@@ -27,10 +27,10 @@ module ExtremeStartup
       available_question_types = @question_types[0..(@round * 2 - 1)]
       available_question_types.sample.new(player)
     end
-    
+
     def advance_round
       @round += 1
-    end  
+    end
   end
 
   class WarmupQuestion < Question
@@ -47,7 +47,7 @@ module ExtremeStartup
       return -1
     end
     def as_text
-      "what is your name"
+      "hva heter laget deres"
     end
   end
 
@@ -78,7 +78,7 @@ module ExtremeStartup
       question_set.count { |q| player.correct_answers(q) == 0 } == 0
     end
   end
-  
+
   class WarmupQuestionFactory < GatedQuestionFactory
     def initialize
       super([
@@ -99,12 +99,12 @@ module ExtremeStartup
           DivisionQuestion,
           AdditionQuestion,
           MaximumQuestion,
-          MultiplicationQuestion, 
+          MultiplicationQuestion,
           SquareCubeQuestion,
           GeneralKnowledgeQuestion,
           PrimesQuestion,
           SubtractionQuestion,
-          FibonacciQuestion,  
+          FibonacciQuestion,
           #PowerQuestion,
           #AdditionAdditionQuestion,
           AdditionMultiplicationQuestion,

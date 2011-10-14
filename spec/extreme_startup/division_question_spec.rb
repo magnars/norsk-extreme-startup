@@ -8,7 +8,7 @@ module ExtremeStartup
       let(:question) { DivisionQuestion.new(Player.new, 8, 2) }
 
       it "converts to the right string" do
-        question.as_text.should =~ /what is 8 divided by 2/i
+        question.as_text.should =~ /hva er 8 delt med 2/i
       end
       it "identifies a correct answer" do
         question.answer = "4"
@@ -27,7 +27,7 @@ module ExtremeStartup
         question.result.should == "wrong"
       end
     end
-    
+
     context "when the quotient is an simple decimal" do
       let(:question) { DivisionQuestion.new(Player.new, 2, 8) }
       it "identifies a correct answer" do
@@ -35,7 +35,7 @@ module ExtremeStartup
         question.result.should == "correct"
       end
     end
-    
+
     context "when the quotient is an infitite decimal" do
       let(:question) { DivisionQuestion.new(Player.new, 1, 3) }
       it "accepts answers with three correct decimal places" do
@@ -47,8 +47,8 @@ module ExtremeStartup
         question.result.should == "correct"
       end
     end
-    
-    
+
+
     context "when the divisor is zero" do
       let(:question) { DivisionQuestion.new(Player.new, 10, 0) }
       it "rejects empty answer" do

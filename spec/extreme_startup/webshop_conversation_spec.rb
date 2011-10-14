@@ -9,7 +9,7 @@ module ExtremeStartup::Questions
       let(:conversation) { WebshopConversation.new }
 
       it "should start by asking for products" do
-        conversation.question.should == "what products do you have for sale (comma separated)"
+        conversation.question.should == "hvilke produkter har du til salgs (kommaseparert)"
       end
 
      it "should not allow only one product" do
@@ -21,7 +21,7 @@ module ExtremeStartup::Questions
         conversation.add_answer("red balloon, green balloon, blue balloon")
         conversation.score.should == 30
       end
-      
+
       it "should only award one point for numeric products" do
         conversation.add_answer("product123, product 1234, 123 product, 12product, red balloon")
         conversation.score.should == 14
@@ -43,7 +43,7 @@ module ExtremeStartup::Questions
 
       it "should ask for the price of a product" do
         conversation.question.should =~
-          /how many dollars does one (red|green|blue) balloon cost/
+          /hvor mange kroner koster ett stykk (red|green|blue) balloon/
       end
 
       it "should accept a numeric answer" do
@@ -53,14 +53,14 @@ module ExtremeStartup::Questions
 
       it "should remember a price" do
         conversation.question =~
-          /how many dollars does one ((red|green|blue) balloon) cost/
+          /hvor mange kroner koster ett stykk ((red|green|blue) balloon)/
         conversation.add_answer "12.99"
         conversation.price_for($1).should == 12.99
       end
 
       it "should reject a non-numeric answer" do
         conversation.question =~
-          /how many dollars does one ((red|green|blue) balloon) cost/
+          /hvor mange kroner koster ett stykk ((red|green|blue) balloon)/
         conversation.add_answer "two dollars"
         conversation.score.should == -5
       end
@@ -91,7 +91,7 @@ module ExtremeStartup::Questions
       end
 
       it "should put items in shopping cart" do
-        conversation.question.should =~ /please put \d+ (red|blue) balloon in my shopping cart/
+        conversation.question.should =~ /legg \d+x (red|blue) balloon i min handlekurv/
       end
 
       it "should accept any answer" do
@@ -101,7 +101,7 @@ module ExtremeStartup::Questions
       end
 
       it "remembers what it bought" do
-        conversation.question =~ /put (\d+) (red balloon|blue balloon)/
+        conversation.question =~ /legg (\d+)x (red balloon|blue balloon)/
         conversation.add_answer "okay"
         conversation.shopping_cart_count_for($2).should == $1.to_i
       end
@@ -115,7 +115,7 @@ module ExtremeStartup::Questions
       end
 
       it "asks for total" do
-        conversation.question.should == "what is my order total"
+        conversation.question.should == "hvor mye koster alle varene i handlekurven min"
       end
 
       it "accepts correct total" do
